@@ -109,8 +109,20 @@
                 </form>
             </div>
         </div>
-        {% for entry in entrys %}
-            {{ entry.name }}
-        {% endfor %}
+        <div class="container-fluid">
+            {% for entry in entrys %}
+                <div class="row">
+                    <hr />
+                    <div class="g-col-4">
+                        <img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=50&maxheight=75&photo_reference={{ entry.res_photo }}&key=AIzaSyDDKTXC22b3UwBzEoULKfOry0O1f4hbfYE" alt="alt text here" />
+                    </div>
+                    <div class="g-col-4">
+                        {{ entry.name }} <br />
+                        Rating: {{ entry.rating}} | Price Level: {{entry.price_level}} <br />
+                        {{ entry.vicinity }} <br />
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
 </body>
 </html>

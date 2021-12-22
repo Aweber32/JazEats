@@ -4,6 +4,7 @@ from flask import Flask, render_template
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, BooleanField, SelectField 
 
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'JazEatz'
 
@@ -36,10 +37,15 @@ def home():
         #Add open now
 
         response = requests.get(url)
-        parse_json = json.loads(response.text)
+        parse_json_o = json.loads(response.text)
+        parse_json = parse_json_o['results']
+   
+        for entitys in parse_json:
+            ent_photo =  str(entitys['photos']).split("'")
+            entitys.update({'res_photo' : ent_photo[9]})
 
-    entrys = parse_json['results']
-        
+    entrys = parse_json
+ 
     return render_template('home.html', form=form, entrys=entrys) 
 
 if __name__ == '__main__':
