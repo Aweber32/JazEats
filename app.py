@@ -49,8 +49,9 @@ def home():
         response = requests.get(url)
         parse_json_o = json.loads(response.text)
         parse_json = parse_json_o['results']
-        time.sleep(2)
+        
         for entitys in parse_json:
+            time.sleep(2)
             ent_photo =  str(entitys['photos']).split("'")
             entitys.update({'res_photo' : ent_photo[9]})
     
