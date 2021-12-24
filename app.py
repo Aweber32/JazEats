@@ -19,12 +19,21 @@ class InputForm(FlaskForm):
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
+    res = requests.get('https://ipinfo.io/')
+    data = res.json()
+
+    location = data['loc'].split(',')
+    lat = float(location[0])
+    log = float(location[1])
+    lat = str(lat)
+    log = str(log)
+
     let_alex_decide = None
     keyword = None
     min_price = None
     max_price = None
     distance = None
-    parse_json = ' '
+    parse_json = 'n/a'
     form = InputForm()
     if form.validate_on_submit():
         let_alex_decide = form.let_alex_decide.data
@@ -33,7 +42,7 @@ def home():
         max_price = form.max_price.data 
         distance = form.distance.data 
                 
-        url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=39.0168576,-87.7428736&radius="+distance+"&type=restaurant&keyword="+keyword+"&maxprice="+max_price+"&minprice="+min_price+"&rankby=prominence&key=AIzaSyDDKTXC22b3UwBzEoULKfOry0O1f4hbfYE"
+        url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+ lat +"," + log + "&radius="+distance+"&type=restaurant&keyword="+keyword+"&maxprice="+max_price+"&minprice="+min_price+"&rankby=prominence&key=AIzaSyDDKTXC22b3UwBzEoULKfOry0O1f4hbfYE"
         #Add open now
 
         response = requests.get(url)
@@ -43,10 +52,13 @@ def home():
         for entitys in parse_json:
             ent_photo =  str(entitys['photos']).split("'")
             entitys.update({'res_photo' : ent_photo[9]})
-
-    entrys = parse_json
- 
-    return render_template('home.html', form=form, entrys=entrys) 
+    
+    if let_alex_decide == True:
+        entrys = [parse_json[0]]
+    else:
+         entrys = parse_json
+    
+    return render_template('home.html', form=form, entrys=entrys, lat=lat, log=log) 
 
 if __name__ == '__main__':
     app.run(debug=True)
