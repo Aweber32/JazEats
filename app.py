@@ -3,6 +3,7 @@ import json
 from flask import Flask, render_template
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, BooleanField, SelectField 
+import time
 
 
 app = Flask(__name__)
@@ -48,7 +49,7 @@ def home():
         response = requests.get(url)
         parse_json_o = json.loads(response.text)
         parse_json = parse_json_o['results']
-   
+        time.sleep(2)
         for entitys in parse_json:
             ent_photo =  str(entitys['photos']).split("'")
             entitys.update({'res_photo' : ent_photo[9]})
